@@ -1,0 +1,8 @@
+c:\gnt\etl\etl\bin\Debug\etl.exe.config
+c:\gnt\etl\etl\bin\Debug\etl.exe
+c:\gnt\etl\etl\bin\Debug\etl.pdb
+c:\gnt\etl\etl\bin\Debug\Npgsql.dll
+c:\gnt\etl\etl\bin\Debug\Npgsql.xml
+c:\gnt\etl\etl\obj\Debug\etl.csprojResolveAssemblyReference.cache
+c:\gnt\etl\etl\obj\Debug\etl.exe
+c:\gnt\etl\etl\obj\Debug\etl.pdb
