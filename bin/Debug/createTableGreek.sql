@@ -34,7 +34,15 @@ CREATE TABLE greek
   word_without_punct character varying(40), -- The word without any question marks or such on the end.
   word character varying(40), -- The with normalzed accents and such. Good for searching on exact hits.
   root character varying(40), -- Root word
-  sequence smallint -- Order of this word in this sentence
+  sentence_position smallint, -- Order of this word in this sentence
+  strongs_num integer,
+  family_num integer, -- Each word can belong to a family, and that family is a number. This is for speed searching on relationships. This number will be based on how words group and relate.
+  root_num integer, -- Every unique Greek root gets a number, to speed searching
+  book_position integer, -- Position of this word in this book. This way we can measure distance between words. Each book is like its own number line.
+  root_freq_nt integer, -- How often does the root word appear in the Greek NT
+  word_freq_nt integer, -- How often this word appears as is in whole NT
+  root_freq_book integer, -- How often this root word appears in this book
+  word_freq_book integer -- How often this word as this word like this word in this form appears in this book
 )
 WITH (
   OIDS=FALSE
@@ -63,4 +71,12 @@ COMMENT ON COLUMN greek.word_with_punct IS 'The word, with sentence markers like
 COMMENT ON COLUMN greek.word_without_punct IS 'The word without any question marks or such on the end.';
 COMMENT ON COLUMN greek.word IS 'The with normalzed accents and such. Good for searching on exact hits.';
 COMMENT ON COLUMN greek.root IS 'Root word';
-COMMENT ON COLUMN greek.sequence IS 'Order of this word in this sentence';
+COMMENT ON COLUMN greek.sentence_position IS 'Order of this word in this sentence';
+COMMENT ON COLUMN greek.family_num IS 'Each word can belong to a family, and that family is a number. This is for speed searching on relationships. This number will be based on how words group and relate.';
+COMMENT ON COLUMN greek.root_num IS 'Every unique Greek root gets a number, to speed searching';
+COMMENT ON COLUMN greek.book_position IS 'Position of this word in this book. This way we can measure distance between words. Each book is like its own number line.';
+COMMENT ON COLUMN greek.root_freq_nt IS 'How often does the root word appear in the Greek NT';
+COMMENT ON COLUMN greek.word_freq_nt IS 'How often this word appears as is in whole NT';
+COMMENT ON COLUMN greek.root_freq_book IS 'How often this root word appears in this book';
+COMMENT ON COLUMN greek.word_freq_book IS 'How often this word as this word like this word in this form appears in this book';
+
