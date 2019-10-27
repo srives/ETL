@@ -16,12 +16,9 @@
 //
 //  
 //
+using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Npgsql;
 using System.IO;
 
 namespace etl
@@ -247,7 +244,6 @@ namespace etl
                             string word_without_punct = parts[4];
                             string word = parts[5];
                             string root = parts[6];
-                                
 
                             string values = "values (";
                             values += "'" + book_name + "',";
@@ -293,12 +289,12 @@ namespace etl
                             }
                             else
                                 ttl++;
+
                             cmd.Dispose();
                         }
                         Console.WriteLine("Imported " + ttl + " words into the Postgre database");
                         if (errors != 0)
                             Console.WriteLine("  " + errors + " errors.");
-
                     }
                     else
                         Console.WriteLine("Could not connect to Postgres database: " + connection);
@@ -309,6 +305,5 @@ namespace etl
             else
                 Console.WriteLine("Could not find file: " + fileName);
         }
-        
     }
 }
