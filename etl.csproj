@@ -56,33 +56,87 @@
   <ItemGroup>
     <Content Include="DB_Scripts\createTableGreek.sql" />
     <Content Include="readme.txt" />
-    <Content Include="Texts\61-Mt-morphgnt.txt" />
-    <Content Include="Texts\62-Mk-morphgnt.txt" />
-    <Content Include="Texts\63-Lk-morphgnt.txt" />
-    <Content Include="Texts\64-Jn-morphgnt.txt" />
-    <Content Include="Texts\65-Ac-morphgnt.txt" />
-    <Content Include="Texts\66-Ro-morphgnt.txt" />
-    <Content Include="Texts\67-1Co-morphgnt.txt" />
-    <Content Include="Texts\68-2Co-morphgnt.txt" />
-    <Content Include="Texts\69-Ga-morphgnt.txt" />
-    <Content Include="Texts\70-Eph-morphgnt.txt" />
-    <Content Include="Texts\71-Php-morphgnt.txt" />
-    <Content Include="Texts\72-Col-morphgnt.txt" />
-    <Content Include="Texts\73-1Th-morphgnt.txt" />
-    <Content Include="Texts\74-2Th-morphgnt.txt" />
-    <Content Include="Texts\75-1Ti-morphgnt.txt" />
-    <Content Include="Texts\76-2Ti-morphgnt.txt" />
-    <Content Include="Texts\77-Tit-morphgnt.txt" />
-    <Content Include="Texts\78-Phm-morphgnt.txt" />
-    <Content Include="Texts\79-Heb-morphgnt.txt" />
-    <Content Include="Texts\80-Jas-morphgnt.txt" />
-    <Content Include="Texts\81-1Pe-morphgnt.txt" />
-    <Content Include="Texts\82-2Pe-morphgnt.txt" />
-    <Content Include="Texts\83-1Jn-morphgnt.txt" />
-    <Content Include="Texts\84-2Jn-morphgnt.txt" />
-    <Content Include="Texts\85-3Jn-morphgnt.txt" />
-    <Content Include="Texts\86-Jud-morphgnt.txt" />
-    <Content Include="Texts\87-Re-morphgnt.txt" />
+    <Content Include="Texts\61-Mt-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\62-Mk-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\63-Lk-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\64-Jn-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\65-Ac-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\66-Ro-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\67-1Co-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\68-2Co-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\69-Ga-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\70-Eph-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\71-Php-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\72-Col-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\73-1Th-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\74-2Th-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\75-1Ti-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\76-2Ti-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\77-Tit-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\78-Phm-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\79-Heb-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\80-Jas-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\81-1Pe-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\82-2Pe-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\83-1Jn-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\84-2Jn-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\85-3Jn-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\86-Jud-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texts\87-Re-morphgnt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

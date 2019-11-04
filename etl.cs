@@ -14,6 +14,7 @@
 //  
 //            This mode will import one file into the postgres database into Database=Bible table=Greek
 using System;
+using System.Diagnostics;
 
 namespace etl
 {
@@ -29,18 +30,18 @@ namespace etl
             {
                 if (args[0] == "-mssql")
                 {
-                    MS_SQL.ImportOneFileIntoPostgres(args[1], args[2], args[3]);
+                    MS_SQL.ImportOneFileIntoPostgres(args[1], args[2].ToLower(), args[3].ToLower());
                 }
                 else if (args[0] == "-postgresql")
                 {
-                    PostgreSQL.ImportOneFileIntoPostgres(args[1], args[2], args[3]);
+                    PostgreSQL.ImportOneFileIntoPostgres(args[1], args[2].ToLower(), args[3].ToLower());
                 }
             }
             else
             {
-                Console.WriteLine("Usage: ETL [-databaseType] [-root] | [<filename> <book name> <short name>]");
+                Console.WriteLine("Usage: ETL [<-databaseType> | <-root>] | [<filename> <book name> <short name>]");
                 Console.WriteLine("       Greek NT Database Population tool.");
-                Console.WriteLine("       Populates a Postgres database with the SBL GNT Morphological text files.");
+                Console.WriteLine("       Populates a T-SQL or PostgreSQL database with the SBL GNT Morphological text files.");
                 Console.WriteLine("Two modes:");
                 Console.WriteLine("     Mode 1: Update the populated database (this is done with the -root option)");
                 Console.WriteLine("         This mode will generate a unique number for each root word in the NT");
@@ -49,15 +50,21 @@ namespace etl
                 Console.WriteLine("         The benefit of doing this is speeding up searching.");
                 Console.WriteLine("         You will be able to write software to search on number instead of strings.");
                 Console.WriteLine("     Mode 2: Populate the database");
-                Console.WriteLine("         This will import SBL GNT Morph data into postgre database = Bible, table = Greek");
+                Console.WriteLine("         This will import SBL GNT Morph data into the database = Bible, table = Greek");
                 Console.WriteLine("         For example:");
-                Console.WriteLine("                        ETL 61-Mt-morphgnt.txt Matthew Mt");
+                Console.WriteLine("                        ETL -mssql 61-Mt-morphgnt.txt Matthew Mt");
                 Console.WriteLine();
                 Console.WriteLine("For the format of the talbe we modify, see the SQL script, createTableGreek.sql");
                 Console.WriteLine("For this and more, go to https://github.com/srives/ETL");
                 Console.WriteLine();
                 Console.WriteLine($"Stephen S. Rives, {DateTime.Now.Year}");
-            }           
+            }
+
+            if (Debugger.IsAttached)
+            {
+                Console.WriteLine("SUCCESS");
+                Console.ReadLine();
+            }
         }
     }
 }

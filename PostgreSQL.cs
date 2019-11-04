@@ -24,17 +24,17 @@ namespace etl
                 if (conn != null)
                 {
                     conn.Open();
-                    var sql = "select distinct root from greek order by root";
-                    var cmd = new NpgsqlCommand(sql, conn);
 
-                    using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    var sql = "select distinct root from Greek order by root";
+                    using (var cmd = new NpgsqlCommand(sql, conn))
                     {
-                        Console.WriteLine("Generating unique number for each unqiue root word.");
-                        while (reader.Read())
-                            rootWords[reader["root"].ToString()] = rivesNum++;
+                        using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Console.WriteLine("Generating unique number for each unqiue root word.");
+                            while (reader.Read())
+                                rootWords[reader["root"].ToString()] = rivesNum++;
+                        }
                     }
-
-                    cmd.Dispose();
                     Console.WriteLine("Number of unique NT words = " + rootWords.Count);
 
                     int hapax = 0;
@@ -42,25 +42,26 @@ namespace etl
                     // the root word occurs.
                     foreach (var pair in rootWords)
                     {
+                        int frequency;
                         int root_num = pair.Value;
-                        sql = "update greek set root_num=" + root_num + " where root='" + pair.Key + "'";
-                        cmd = new NpgsqlCommand(sql, conn);
-                        int frequence = cmd.ExecuteNonQuery();
-                        if (frequence == 1)
-                            hapax++;
+                        sql = "update Greek set root_num=" + root_num + " where root='" + pair.Key + "'";
+                        using (var cmd = new NpgsqlCommand(sql, conn))
+                        {
+                            frequency = cmd.ExecuteNonQuery();
+                            if (frequency == 1)
+                                hapax++;
 
-                        if (frequence <= 0)
-                            Console.WriteLine("Error writing out data for " + pair.Key);
+                            if (frequency <= 0)
+                                Console.WriteLine("Error writing out data for " + pair.Key);
+                        }
 
-                        cmd.Dispose();
-                        sql = "update greek set root_freq_nt=" + frequence + " where root='" + pair.Key + "'";
-                        cmd = new NpgsqlCommand(sql, conn);
-
-                        int written = cmd.ExecuteNonQuery();
-                        if (written != frequence)
-                            Console.WriteLine("Error saving frequency count for " + pair.Key);
-
-                        cmd.Dispose();
+                        sql = "update Greek set root_freq_nt=" + frequency + " where root='" + pair.Key + "'";
+                        using (var cmd = new NpgsqlCommand(sql, conn))
+                        {
+                            int written = cmd.ExecuteNonQuery();
+                            if (written != frequency)
+                                Console.WriteLine("Error saving frequency count for " + pair.Key);
+                        }
                     }
 
                     Console.WriteLine("Updated databae.");
@@ -74,7 +75,7 @@ namespace etl
         /// <summary>
         /// This function will read one .txt file from the SBNGNT MorphGNT SBLGNT repository (found on GitHub)
         /// It will import that data into Postgres into the database specifed in the global connection string, into
-        /// the greek table. 
+        /// the Greek table. 
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="book_name"></param>
@@ -83,12 +84,13 @@ namespace etl
         {
             int ttl = 0; // how many records I added to the postgres database
             int errors = 0;
-
             int canon_order = 0;
 
-            if (File.Exists(fileName))
+            var filePath = $"Texts/{fileName}";
+
+            if (File.Exists(filePath))
             {
-                using (StreamReader sr = File.OpenText(fileName))
+                using (StreamReader sr = File.OpenText(filePath))
                 {
                     if (sr != null)
                     {
@@ -97,8 +99,9 @@ namespace etl
                             if (conn != null)
                             {
                                 conn.Open();
-                                var s = String.Empty;
-                                var insert = "insert into greek (book_name, short_name, canon_order, chapter, verse," +
+
+                                var s = string.Empty;
+                                var insert = "insert into Greek (book_name, short_name, canon_order, chapter, verse," +
                                                                     "adjective, conjunction, adverb, interjection, noun," +
                                                                     "preposition, article, demons_pronoun, indef_pronoun," +
                                                                     "person_pronoun, relative_pronoun, verb, particle," +
@@ -253,32 +256,32 @@ namespace etl
                                     values += "" + book_position + ")";
 
                                     string sql = insert + " " + values;
-                                    var cmd = new NpgsqlCommand(sql, conn);
-                                    int ct = cmd.ExecuteNonQuery();
-                                    if (ct == 0)
+                                    using (var cmd = new NpgsqlCommand(sql, conn))
                                     {
-                                        errors++;
-                                        Console.WriteLine("Insert error");
+                                        int ct = cmd.ExecuteNonQuery();
+                                        if (ct == 0)
+                                        {
+                                            errors++;
+                                            Console.WriteLine("Insert error");
+                                        }
+                                        else
+                                            ttl++;
                                     }
-                                    else
-                                        ttl++;
-
-                                    cmd.Dispose();
                                 }
-                                Console.WriteLine("Imported " + ttl + " words into the Postgre database");
+                                Console.WriteLine("Imported " + ttl + " words into the database");
                                 if (errors != 0)
                                     Console.WriteLine("  " + errors + " errors.");
                             }
                             else
-                                Console.WriteLine("Could not connect to Postgres database: " + connection);
+                                Console.WriteLine("Could not connect to database: " + connection);
                         }
                     }
                     else
-                        Console.WriteLine("Could not open file: " + fileName);
+                        Console.WriteLine("Could not open file: " + filePath);
                 }
             }
             else
-                Console.WriteLine("Could not find file: " + fileName);
+                Console.WriteLine("Could not find file: " + filePath);
         }
     }
 }
