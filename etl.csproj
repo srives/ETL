@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="etl.cs" />
+    <Compile Include="ETL.cs" />
+    <Compile Include="MS_SQL.cs" />
     <Compile Include="PostgreSQL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -17,17 +17,28 @@ using System;
 
 namespace etl
 {
-    class etl
+    class ETL
     {
         static void Main(string[] args)
         {
-            if (args.Length == 1 && args[0] == "-root")
+            if (args.Length == 2 && args[0] == "-mssql" && args[1] == "-root")
+                MS_SQL.AssignRootNumbers();
+            else if (args.Length == 2 && args[0] == "-postgresql" && args[1] == "-root")
                 PostgreSQL.AssignRootNumbers();
-            else if (args.Length == 3)
-                PostgreSQL.ImportOneFileIntoPostgres(args[0], args[1], args[2]);
+            else if (args.Length == 4)
+            {
+                if (args[0] == "-mssql")
+                {
+                    MS_SQL.ImportOneFileIntoPostgres(args[1], args[2], args[3]);
+                }
+                else if (args[0] == "-postgresql")
+                {
+                    PostgreSQL.ImportOneFileIntoPostgres(args[1], args[2], args[3]);
+                }
+            }
             else
             {
-                Console.WriteLine("Usage: ETL [-root] | [<filename> <book name> <short name>]");
+                Console.WriteLine("Usage: ETL [-databaseType] [-root] | [<filename> <book name> <short name>]");
                 Console.WriteLine("       Greek NT Database Population tool.");
                 Console.WriteLine("       Populates a Postgres database with the SBL GNT Morphological text files.");
                 Console.WriteLine("Two modes:");
