@@ -84,8 +84,6 @@ namespace etl
         {
             int ttl = 0; // how many records I added to the postgres database
             int errors = 0;
-            int canon_order = 0;
-
             var filePath = $"Texts/{fileName}";
 
             if (File.Exists(filePath))
@@ -94,168 +92,177 @@ namespace etl
                 {
                     if (sr != null)
                     {
-                        using (var conn = new SqlConnection(connection))
+                        var s = string.Empty;
+                        int last_verse = 0;
+                        int sentence_position = 0; // within this verse, a word has a position
+                        int book_position = 0;     // and within this book, it also has a position
+
+                        while ((s = sr.ReadLine()) != null)
                         {
-                            if (conn != null)
+                            book_position++;
+                            sentence_position++;
+
+                            // 0      1  2        3           4           5           6
+                            // 012812 A- ----GPM- πρεσβυτέρων πρεσβυτέρων πρεσβυτέρων πρεσβύτερος
+
+                            string[] parts = s.Split(' ');
+                            int canon_order = int.Parse(parts[0].Substring(0, 2));
+                            int chapter = int.Parse(parts[0].Substring(2, 2));
+                            int verse = int.Parse(parts[0].Substring(4, 2));
+                            if (verse != last_verse)
+                                sentence_position = 1;
+
+                            last_verse = verse;
+
+                            // Parts of Speech
+                            bool adjective = parts[1] == "A-";
+                            bool conjunction = parts[1] == "C-";
+                            bool adverb = parts[1] == "D-";
+                            bool interjection = parts[1] == "I-";
+                            bool noun = parts[1] == "N-";
+                            bool preposition = parts[1] == "P-";
+                            bool article = parts[1] == "RA";
+                            bool demons_pronoun = parts[1] == "RD";
+                            bool indef_pronoun = parts[1] == "RI";
+                            bool person_pronoun = parts[1] == "RP";
+                            bool relative_pronoun = parts[1] == "RR";
+                            bool verb = parts[1] == "V-";
+                            bool particle = parts[1] == "X-";
+                            // Parsing Code, 3AAI-S--
+                            int.TryParse(parts[2].Substring(0, 1), out int person);
+
+                            string tense = parts[2].Substring(1, 1);
+                            // tense (P=present, I=imperfect, F=future, A=aorist, X=perfect, Y=pluperfect)
+                            if (tense == "-")
+                                tense = string.Empty;
+                            if (tense == "P")
+                                tense = "Present";
+                            if (tense == "I")
+                                tense = "Imperfect";
+                            if (tense == "F")
+                                tense = "Future";
+                            if (tense == "A")
+                                tense = "Aorist";
+                            if (tense == "X")
+                                tense = "Perfect";
+                            if (tense == "Y")
+                                tense = "Pluperfect";
+
+                            string voice = parts[2].Substring(2, 1); // voice (A=active, M=middle, P=passive)
+                            if (voice == "-")
+                                voice = string.Empty;
+                            if (voice == "A")
+                                voice = "Active";
+                            if (voice == "M")
+                                voice = "Middle";
+                            if (voice == "P")
+                                voice = "Passive";
+
+                            string mood = parts[2].Substring(3, 1); // (I=indicative, D=imperative, S=subjunctive, O=optative, N=infinitive, P=participle)
+                            if (mood == "-")
+                                mood = string.Empty;
+                            if (mood == "I")
+                                mood = "Indicative";
+                            if (mood == "D")
+                                mood = "Imperative";
+                            if (mood == "S")
+                                mood = "Subjunctive";
+                            if (mood == "O")
+                                mood = "Optative";
+                            if (mood == "N")
+                                mood = "Infinitive";
+                            if (mood == "P")
+                                mood = "Participle";
+
+                            string noun_case = parts[2].Substring(4, 1); // (N=nominative, G=genitive, D=dative, A=accusative)
+                            if (noun_case == "-")
+                                noun_case = string.Empty;
+                            if (noun_case == "N")
+                                noun_case = "Nominative";
+                            if (noun_case == "G")
+                                noun_case = "Genitive";
+                            if (noun_case == "D")
+                                noun_case = "Dative";
+                            if (noun_case == "A")
+                                noun_case = "Accusative";
+                            if (noun_case == "V")
+                                noun_case = "Vocative";
+
+                            string sing_or_plural = parts[2].Substring(5, 1); // (S=singular, P=plural)
+                            if (sing_or_plural == "-")
+                                sing_or_plural = string.Empty;
+
+                            string gender = parts[2].Substring(6, 1); // (M=masculine, F=feminine, N=neuter)
+                            if (gender == "-")
+                                gender = string.Empty;
+
+                            string degree = parts[2].Substring(7, 1); // (C=comparative, S=superlative)
+                            if (degree == "-")
+                                degree = string.Empty;
+
+                            // The words
+                            string word_with_punct = parts[3];
+                            string word_without_punct = parts[4];
+                            string word = parts[5];
+                            string root = parts[6];
+
+                            string values = "values (";
+                            values += "'" + book_name + "',";
+                            values += "'" + short_name + "',";
+                            values += "" + canon_order + ",";
+                            values += "" + chapter + ",";
+                            values += "" + verse + ",";
+                            values += "" + Convert.ToInt32(adjective) + ",";
+                            values += "" + Convert.ToInt32(conjunction) + ",";
+                            values += "" + Convert.ToInt32(adverb) + ",";
+                            values += "" + Convert.ToInt32(interjection) + ",";
+                            values += "" + Convert.ToInt32(noun) + ",";
+                            values += "" + Convert.ToInt32(preposition) + ",";
+                            values += "" + Convert.ToInt32(article) + ",";
+                            values += "" + Convert.ToInt32(demons_pronoun) + ",";
+                            values += "" + Convert.ToInt32(indef_pronoun) + ",";
+                            values += "" + Convert.ToInt32(person_pronoun) + ",";
+                            values += "" + Convert.ToInt32(relative_pronoun) + ",";
+                            values += "" + Convert.ToInt32(verb) + ",";
+                            values += "" + Convert.ToInt32(particle) + ",";
+                            values += "" + person + ",";
+                            values += "'" + tense + "',";
+                            values += "'" + voice + "',";
+                            values += "'" + mood + "',";
+                            values += "'" + noun_case + "',";
+                            values += "'" + sing_or_plural + "',";
+                            values += "'" + gender + "',";
+                            values += "'" + degree + "',";
+                            values += "'" + word_with_punct + "',";
+                            values += "'" + word_without_punct + "',";
+                            values += "'" + word + "',";
+                            values += "'" + root + "',";
+                            values += "" + sentence_position + ",";
+                            values += "" + book_position + ")";
+
+                            var duplicateCheck = "IF NOT EXISTS(" +
+                                "SELECT 1 " +
+                                "FROM Greek " +
+                                $"WHERE short_name = '{short_name}' AND book_position = {book_position})";
+
+                            var insert = "BEGIN " +
+                                "insert into Greek (book_name, short_name, canon_order, chapter, verse," +
+                                    "adjective, conjunction, adverb, interjection, noun," +
+                                    "preposition, article, demons_pronoun, indef_pronoun," +
+                                    "person_pronoun, relative_pronoun, verb, particle," +
+                                    "person, tense, voice, mood, noun_case, sing_or_plural," +
+                                    "gender, degree, word_with_punct, word_without_punct," +
+                                    "word, root, sentence_position, book_position)" +
+                                    $" {values}" +
+                                " END";
+
+                            var sql = duplicateCheck + " " + insert;
+
+                            using (var conn = new SqlConnection(connection))
                             {
-                                conn.Open();
-
-                                var s = string.Empty;
-                                var insert = "insert into Greek (book_name, short_name, canon_order, chapter, verse," +
-                                                                    "adjective, conjunction, adverb, interjection, noun," +
-                                                                    "preposition, article, demons_pronoun, indef_pronoun," +
-                                                                    "person_pronoun, relative_pronoun, verb, particle," +
-                                                                    "person, tense, voice, mood, noun_case, sing_or_plural," +
-                                                                    "gender, degree, word_with_punct, word_without_punct," +
-                                                                    "word, root, sentence_position, book_position)";
-                                int last_verse = 0;
-                                int sentence_position = 0; // within this verse, a word has a position
-                                int book_position = 0;     // and within this book, it also has a position
-
-                                while ((s = sr.ReadLine()) != null)
+                                if (conn != null)
                                 {
-                                    book_position++;
-                                    sentence_position++;
-
-                                    // 0      1  2        3           4           5           6
-                                    // 012812 A- ----GPM- πρεσβυτέρων πρεσβυτέρων πρεσβυτέρων πρεσβύτερος
-
-                                    string[] parts = s.Split(' ');
-                                    canon_order = int.Parse(parts[0].Substring(0, 2));
-                                    int chapter = int.Parse(parts[0].Substring(2, 2));
-                                    int verse = int.Parse(parts[0].Substring(4, 2));
-                                    if (verse != last_verse)
-                                        sentence_position = 1;
-                                    last_verse = verse;
-
-                                    // Parts of Speech
-                                    bool adjective = parts[1] == "A-";
-                                    bool conjunction = parts[1] == "C-";
-                                    bool adverb = parts[1] == "D-";
-                                    bool interjection = parts[1] == "I-";
-                                    bool noun = parts[1] == "N-";
-                                    bool preposition = parts[1] == "P-";
-                                    bool article = parts[1] == "RA";
-                                    bool demons_pronoun = parts[1] == "RD";
-                                    bool indef_pronoun = parts[1] == "RI";
-                                    bool person_pronoun = parts[1] == "RP";
-                                    bool relative_pronoun = parts[1] == "RR";
-                                    bool verb = parts[1] == "V-";
-                                    bool particle = parts[1] == "X-";
-                                    // Parsing Code, 3AAI-S--
-                                    int person = 0;
-                                    int.TryParse(parts[2].Substring(0, 1), out person);
-
-                                    string tense = parts[2].Substring(1, 1);
-                                    // tense (P=present, I=imperfect, F=future, A=aorist, X=perfect, Y=pluperfect)
-                                    if (tense == "-")
-                                        tense = string.Empty;
-                                    if (tense == "P")
-                                        tense = "Present";
-                                    if (tense == "I")
-                                        tense = "Imperfect";
-                                    if (tense == "F")
-                                        tense = "Future";
-                                    if (tense == "A")
-                                        tense = "Aorist";
-                                    if (tense == "X")
-                                        tense = "Perfect";
-                                    if (tense == "Y")
-                                        tense = "Pluperfect";
-
-                                    string voice = parts[2].Substring(2, 1); // voice (A=active, M=middle, P=passive)
-                                    if (voice == "-")
-                                        voice = string.Empty;
-                                    if (voice == "A")
-                                        voice = "Active";
-                                    if (voice == "M")
-                                        voice = "Middle";
-                                    if (voice == "P")
-                                        voice = "Passive";
-
-                                    string mood = parts[2].Substring(3, 1); // (I=indicative, D=imperative, S=subjunctive, O=optative, N=infinitive, P=participle)
-                                    if (mood == "-")
-                                        mood = string.Empty;
-                                    if (mood == "I")
-                                        mood = "Indicative";
-                                    if (mood == "D")
-                                        mood = "Imperative";
-                                    if (mood == "S")
-                                        mood = "Subjunctive";
-                                    if (mood == "O")
-                                        mood = "Optative";
-                                    if (mood == "N")
-                                        mood = "Infinitive";
-                                    if (mood == "P")
-                                        mood = "Participle";
-
-                                    string noun_case = parts[2].Substring(4, 1); // (N=nominative, G=genitive, D=dative, A=accusative)
-                                    if (noun_case == "-")
-                                        noun_case = string.Empty;
-                                    if (noun_case == "N")
-                                        noun_case = "Nominative";
-                                    if (noun_case == "G")
-                                        noun_case = "Genitive";
-                                    if (noun_case == "D")
-                                        noun_case = "Dative";
-                                    if (noun_case == "A")
-                                        noun_case = "Accusative";
-                                    if (noun_case == "V")
-                                        noun_case = "Vocative";
-
-                                    string sing_or_plural = parts[2].Substring(5, 1); // (S=singular, P=plural)
-                                    if (sing_or_plural == "-")
-                                        sing_or_plural = string.Empty;
-
-                                    string gender = parts[2].Substring(6, 1); // (M=masculine, F=feminine, N=neuter)
-                                    if (gender == "-")
-                                        gender = string.Empty;
-
-                                    string degree = parts[2].Substring(7, 1); // (C=comparative, S=superlative)
-                                    if (degree == "-")
-                                        degree = string.Empty;
-
-                                    // The words
-                                    string word_with_punct = parts[3];
-                                    string word_without_punct = parts[4];
-                                    string word = parts[5];
-                                    string root = parts[6];
-
-                                    string values = "values (";
-                                    values += "'" + book_name + "',";
-                                    values += "'" + short_name + "',";
-                                    values += "" + canon_order + ",";
-                                    values += "" + chapter + ",";
-                                    values += "" + verse + ",";
-                                    values += "" + Convert.ToInt32(adjective) + ",";
-                                    values += "" + Convert.ToInt32(conjunction) + ",";
-                                    values += "" + Convert.ToInt32(adverb) + ",";
-                                    values += "" + Convert.ToInt32(interjection) + ",";
-                                    values += "" + Convert.ToInt32(noun) + ",";
-                                    values += "" + Convert.ToInt32(preposition) + ",";
-                                    values += "" + Convert.ToInt32(article) + ",";
-                                    values += "" + Convert.ToInt32(demons_pronoun) + ",";
-                                    values += "" + Convert.ToInt32(indef_pronoun) + ",";
-                                    values += "" + Convert.ToInt32(person_pronoun) + ",";
-                                    values += "" + Convert.ToInt32(relative_pronoun) + ",";
-                                    values += "" + Convert.ToInt32(verb) + ",";
-                                    values += "" + Convert.ToInt32(particle) + ",";
-                                    values += "" + person + ",";
-                                    values += "'" + tense + "',";
-                                    values += "'" + voice + "',";
-                                    values += "'" + mood + "',";
-                                    values += "'" + noun_case + "',";
-                                    values += "'" + sing_or_plural + "',";
-                                    values += "'" + gender + "',";
-                                    values += "'" + degree + "',";
-                                    values += "'" + word_with_punct + "',";
-                                    values += "'" + word_without_punct + "',";
-                                    values += "'" + word + "',";
-                                    values += "'" + root + "',";
-                                    values += "" + sentence_position + ",";
-                                    values += "" + book_position + ")";
-
-                                    string sql = insert + " " + values;
+                                    conn.Open();
                                     using (var cmd = new SqlCommand(sql, conn))
                                     {
                                         int ct = cmd.ExecuteNonQuery();
@@ -264,24 +271,21 @@ namespace etl
                                             errors++;
                                             Console.WriteLine("Insert error");
                                         }
-                                        else
-                                            ttl++;
+                                        else ttl++;
                                     }
                                 }
-                                Console.WriteLine("Imported " + ttl + " words into the database");
-                                if (errors != 0)
-                                    Console.WriteLine("  " + errors + " errors.");
+                                else Console.WriteLine("Could not connect to database: " + connection);
                             }
-                            else
-                                Console.WriteLine("Could not connect to database: " + connection);
                         }
+
+                        Console.WriteLine("Imported " + ttl + " words into the database");
+                        if (errors != 0)
+                            Console.WriteLine("  " + errors + " errors.");
                     }
-                    else
-                        Console.WriteLine("Could not open file: " + filePath);
+                    else Console.WriteLine("Could not open file: " + filePath);
                 }
             }
-            else
-                Console.WriteLine("Could not find file: " + filePath);
+            else Console.WriteLine("Could not find file: " + filePath);
         }
     }
 }

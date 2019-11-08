@@ -3,7 +3,7 @@
 // 
 //    Mode 1: Stats Generation Mode
 //
-//             ETL -root
+//             ETL <-dbType> -root
 //
 //            This will generate statistics on all the words (their root forms) 
 //            as used in each verse of the bible.

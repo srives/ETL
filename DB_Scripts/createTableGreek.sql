@@ -1,6 +1,6 @@
 -- Table: Greek
 
--- DROP TABLE Greek;
+--DROP TABLE Greek;
 
 CREATE TABLE Greek
 (
@@ -9,6 +9,8 @@ CREATE TABLE Greek
   canon_order smallint, -- Protestant Canonical sequence number....
   chapter smallint,
   verse smallint,
+  sentence_position smallint, -- Order of this word in this sentence
+  book_position integer, -- Position of this word in this book. This way we can measure distance between words. Each book is like its own number line.
   adjective bit,
   conjunction bit,
   adverb bit,
@@ -34,16 +36,15 @@ CREATE TABLE Greek
   word_without_punct character varying(40), -- The word without any question marks or such on the end.
   word character varying(40), -- The with normalzed accents and such. Good for searching on exact hits.
   root character varying(40), -- Root word
-  sentence_position smallint, -- Order of this word in this sentence
   strongs_num integer,
   family_num integer, -- Each word can belong to a family, and that family is a number. This is for speed searching on relationships. This number will be based on how words group and relate.
   root_num integer, -- Every unique Greek root gets a number, to speed searching
-  book_position integer, -- Position of this word in this book. This way we can measure distance between words. Each book is like its own number line.
   root_freq_nt integer, -- How often does the root word appear in the Greek NT
   word_freq_nt integer, -- How often this word appears as is in whole NT
   root_freq_book integer, -- How often this root word appears in this book
   word_freq_book integer -- How often this word as this word like this word in this form appears in this book
 )
+
 --WITH (
 --  OIDS=FALSE
 --);
