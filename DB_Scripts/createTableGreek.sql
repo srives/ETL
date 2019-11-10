@@ -45,6 +45,9 @@ CREATE TABLE Greek
   word_freq_book integer -- How often this word as this word like this word in this form appears in this book
 )
 
+ALTER TABLE Greek
+ADD CONSTRAINT [unique_constraint_greek] UNIQUE(short_name, book_position)
+
 --WITH (
 --  OIDS=FALSE
 --);
