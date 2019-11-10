@@ -10,7 +10,7 @@
 //
 //    Mode 2: Import file mode
 //
-//             ETL some_greek_morph_filename.txt book_name short_name
+//             ETL <-dbType> some_greek_morph_filename.txt book_name short_name
 //  
 //            This mode will import one file into the postgres database into Database=Bible table=Greek
 using System;
@@ -22,6 +22,9 @@ namespace etl
     {
         static void Main(string[] args)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             if (args.Length == 2 && args[0] == "-mssql" && args[1] == "-root")
                 MS_SQL.AssignRootNumbers();
             else if (args.Length == 2 && args[0] == "-postgresql" && args[1] == "-root")
@@ -59,6 +62,9 @@ namespace etl
                 Console.WriteLine();
                 Console.WriteLine($"Stephen S. Rives, {DateTime.Now.Year}");
             }
+
+            stopwatch.Stop();
+            Console.WriteLine("Time elapsed: {0:hh\\:mm\\:ss}", stopwatch.Elapsed);
 
             if (Debugger.IsAttached)
             {
