@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTableUtility.cs" />
     <Compile Include="ETL.cs" />
     <Compile Include="MS_SQL.cs" />
     <Compile Include="PostgreSQL.cs" />
