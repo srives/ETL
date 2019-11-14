@@ -38,6 +38,7 @@ namespace etl
                     }
                     Console.WriteLine("Number of unique NT words = " + rootWords.Count);
 
+                    var heartbeat = 0;
                     int hapax = 0;
                     // For each root word in our Dictionary, update the database with the number of times
                     // the root word occurs.
@@ -64,7 +65,8 @@ namespace etl
                                 Console.WriteLine("Error saving frequency count for " + pair.Key);
                         }
 
-                        if (hapax % 100 == 0) Console.WriteLine($"Heartbeat ({hapax} of {rootWords.Count})."); // heartbeat
+                        heartbeat++;
+                        if (heartbeat % 100 == 0) Console.WriteLine($"Heartbeat ({heartbeat} of {rootWords.Count})."); // heartbeat
                     }
 
                     Console.WriteLine("Updated database.");
