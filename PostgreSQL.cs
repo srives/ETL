@@ -63,9 +63,11 @@ namespace etl
                             if (written != frequency)
                                 Console.WriteLine("Error saving frequency count for " + pair.Key);
                         }
+
+                        if (hapax % 100 == 0) Console.WriteLine($"Heartbeat ({hapax} of {rootWords.Count})."); // heartbeat
                     }
 
-                    Console.WriteLine("Updated databae.");
+                    Console.WriteLine("Updated database.");
                     Console.WriteLine("Number of NT words that are hapax lagomenon: " + hapax);
                 }
                 else
