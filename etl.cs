@@ -35,11 +35,11 @@ namespace etl
                 {
                     if (args[0] == "-mssql")
                     {
-                        MS_SQL.ImportOneFileIntoPostgres(args[1], args[2].ToLower(), args[3].ToLower());
+                        MS_SQL.ImportOneFileIntoTheDatabase(args[1], args[2].ToLower(), args[3].ToLower());
                     }
                     else if (args[0] == "-postgresql")
                     {
-                        PostgreSQL.ImportOneFileIntoPostgres(args[1], args[2].ToLower(), args[3].ToLower());
+                        PostgreSQL.ImportOneFileIntoTheDatabase(args[1], args[2].ToLower(), args[3].ToLower());
                     }
                 }
                 else

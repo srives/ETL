@@ -68,19 +68,19 @@ namespace etl
                     Console.WriteLine("Number of NT words that are hapax lagomenon: " + hapax);
                 }
                 else
-                    Console.WriteLine("Could not connect to Postgres database");
+                    Console.WriteLine("Could not connect to the database");
             }
         }
 
         /// <summary>
         /// This function will read one .txt file from the SBNGNT MorphGNT SBLGNT repository (found on GitHub)
-        /// It will import that data into Postgres into the database specifed in the global connection string, into
+        /// It will import that data into the database specifed in the global connection string, into
         /// the Greek table. 
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="book_name"></param>
         /// <param name="short_name"></param>
-        internal static void ImportOneFileIntoPostgres(string fileName, string book_name, string short_name)
+        internal static void ImportOneFileIntoTheDatabase(string fileName, string book_name, string short_name)
         {
             var filePath = $"Texts/{fileName}";
 
